@@ -1,0 +1,40 @@
+.header {
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    border-bottom: 1px black solid;
+}
+
+.navbar {
+    height: 50%;
+    display: flex;
+}
+
+.link {
+    height: 100%;
+    width: 25vw;
+    max-width: 250px;
+    line-height: 30px;
+    text-align: center;
+    border-right: 1px #CCC solid;
+    &:last-of-type {
+        border: none;
+    }
+}
+
+.main {
+    width: 100vw;
+    max-width: 1024px;
+    margin: 5vh auto;
+    min-height: calc(90vh - 260px);
+    border: 1px black solid;
+
+}
+
+.footer {
+    height: 200px;
+    border-top: 1px black solid;
+}
+
