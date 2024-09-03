@@ -1,14 +1,18 @@
-import React, { HTMLAttributes, ReactNode } from 'react';
+import React, { FormEvent, HTMLAttributes, ReactNode } from 'react';
 
 interface CustomForm extends HTMLAttributes<HTMLFormElement> {
     children? : ReactNode;
+    onSubmit: (e:FormEvent<HTMLFormElement>) => void;
 }
 
-export default function Form({ children, ...props }: CustomForm) {
+export default function Form({ children,  onSubmit, ...props }: CustomForm) {
     return (
         <form
             {...props}
-            onSubmit={(e) => e.preventDefault()}>
+            onSubmit={(e) => {
+                onSubmit(e);
+            }
+            }>
             {children && children}
         </form>
     );

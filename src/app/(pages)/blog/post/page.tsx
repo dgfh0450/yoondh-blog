@@ -1,12 +1,14 @@
 "use client";
 
-import React, { useMemo, useState } from 'react';
+import React, { FormEvent, useMemo, useState } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { IPost } from '../blog';
 import Form from '@/components/ common/Form';
 import styled from '@emotion/styled';
 import NextImage from 'next/image';
+import customFetch from '@/functions/api';
+import { useRouter } from 'next/navigation';
 
 const Wrapper = styled.div`
     height: calc(90vh - 260px);
@@ -73,6 +75,7 @@ const UploadBtn = styled.button`
 `;
 
 export default function Post() {
+    const router = useRouter();
     const [post, setPost] = useState<IPost>({
         title: '',
         body: ''
@@ -111,7 +114,6 @@ export default function Post() {
                 const img = new Image();
                 img.onload = () => {
                     const { width, height } = img;
-                    // Calculate the new width maintaining the aspect ratio
                     const newWidth = (150 / height) * width;
                     setThumbnail({
                         width: newWidth,
@@ -127,10 +129,21 @@ export default function Post() {
         }
     };
     
+    const uploadPost = async () => {
+        const formData = new FormData();
+        formData.append('title', post.title);
+        formData.append('body', post.body);
+        if(post.thumbnail) formData.append('thumbnail', post.thumbnail);
+        const result = await customFetch('/blog', 'POST', formData);
+        router.push('/blog')
+    };
 
     return (
         <Wrapper>
-            <PostForm>
+            <PostForm onSubmit={(e)=> {
+                e.preventDefault();
+                uploadPost();
+            }}>
                 <Input
                     placeholder='제목'
                     onChange={(e) => { setPost({ ...post, title: e.target.value }); }} />
@@ -164,7 +177,7 @@ export default function Post() {
                     </ThumbnailLabel>
                     <input onChange={handleFileChange} style={{ display: 'none' }} type='file' accept='image/*' id='post-thumbnail' />
                 </ThumbnailContainer>
-                <UploadBtn>업로드</UploadBtn>
+                <UploadBtn type='submit'>업로드</UploadBtn>
             </PostForm>
 
         </Wrapper>
