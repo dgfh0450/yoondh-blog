@@ -35,4 +35,9 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+
+
 Dockerfile
+.env
+.env.development
+.env.production
