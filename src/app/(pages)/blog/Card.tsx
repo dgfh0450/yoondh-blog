@@ -22,5 +22,5 @@ export default function Card({ _id, title, body, created, thumbnail }: WithId<Po
                 <p className={styles.created}>{year}.{month}.{date}</p>
             </div>
         </Link>
-    )
+    );
 }

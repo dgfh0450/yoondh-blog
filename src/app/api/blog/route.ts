@@ -12,7 +12,7 @@ export async function GET(req:NextRequest, res:NextResponse) {
 export async function POST(req:NextRequest, res:NextResponse) {
     try {
         const {db, close} = await dbConnect();
-        if(!db) return
+        if(!db) return;
         const postCollection = db.collection('blog_post');
 
         const formData = await req.formData();
@@ -30,10 +30,10 @@ export async function POST(req:NextRequest, res:NextResponse) {
             title: title,
             body: body,
             created: korTime()
-        }
+        };
 
         if(thumbnail) {
-            const filename = await uploadImage(thumbnail)
+            const filename = await uploadImage(thumbnail);
             data.thumbnail = `${process.env.API_URL}/image/blog/${filename}`;
         }
 

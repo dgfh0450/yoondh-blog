@@ -135,7 +135,7 @@ export default function Post() {
         formData.append('body', post.body);
         if(post.thumbnail) formData.append('thumbnail', post.thumbnail);
         const result = await customFetch('/blog', 'POST', formData);
-        router.push('/blog')
+        router.push('/blog');
     };
 
     return (
