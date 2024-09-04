@@ -12,7 +12,9 @@ export async function GET(req:NextRequest, res:NextResponse) {
 export async function POST(req:NextRequest, res:NextResponse) {
     try {
         const {db, close} = await dbConnect();
+
         if(!db) return;
+
         const postCollection = db.collection('blog_post');
 
         const formData = await req.formData();
