@@ -13,5 +13,5 @@ export default async function Post({ params }: { params: { id: string } }) {
             <h2>{title}</h2>
             <div dangerouslySetInnerHTML={{ __html: body }}></div>
         </div>
-    )
+    );
 }
