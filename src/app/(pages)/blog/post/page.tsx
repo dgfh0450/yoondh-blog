@@ -1,7 +1,6 @@
 "use client";
 
 import React, { FormEvent, useMemo, useState } from 'react';
-import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { IPost } from '../blog';
 import Form from '@/components/ common/Form';
@@ -9,6 +8,9 @@ import styled from '@emotion/styled';
 import NextImage from 'next/image';
 import customFetch from '@/functions/api';
 import { useRouter } from 'next/navigation';
+import dynamic from 'next/dynamic';
+
+const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 
 const Wrapper = styled.div`
     height: calc(90vh - 260px);
@@ -80,7 +82,7 @@ export default function Post() {
         title: '',
         body: ''
     });
-    const [thumbnail, setThumbnail] = useState<{width: number, src: string | null, name: string}>({
+    const [thumbnail, setThumbnail] = useState<{ width: number, src: string | null, name: string }>({
         width: 150,
         src: null,
         name: '',
@@ -120,7 +122,7 @@ export default function Post() {
                         src: reader.result as string,
                         name: filename,
                     });
-                    setPost({...post, thumbnail: file});``;
+                    setPost({ ...post, thumbnail: file }); ``;
 
                 };
                 img.src = reader.result as string;
@@ -128,19 +130,19 @@ export default function Post() {
             reader.readAsDataURL(file);
         }
     };
-    
+
     const uploadPost = async () => {
         const formData = new FormData();
         formData.append('title', post.title);
         formData.append('body', post.body);
-        if(post.thumbnail) formData.append('thumbnail', post.thumbnail);
+        if (post.thumbnail) formData.append('thumbnail', post.thumbnail);
         const result = await customFetch('/blog', 'POST', formData);
         router.push('/blog');
     };
 
     return (
         <Wrapper>
-            <PostForm onSubmit={(e)=> {
+            <PostForm onSubmit={(e) => {
                 e.preventDefault();
                 uploadPost();
             }}>
@@ -165,9 +167,9 @@ export default function Post() {
                                     height={150}
                                     objectFit='contain'
                                 />
-    
+
                                 :
-                                <NextImage src='/image-file.svg' alt='thumbnail-btn' width={100} height={100}/>
+                                <NextImage src='/image-file.svg' alt='thumbnail-btn' width={100} height={100} />
                         }
                     </ThumbnailPreview>
                     <ThumbnailLabel htmlFor='post-thumbnail'>
