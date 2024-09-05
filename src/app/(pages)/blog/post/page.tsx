@@ -1,6 +1,6 @@
 "use client";
 
-import React, { FormEvent, useMemo, useState } from 'react';
+import React, { FormEvent, useMemo, useRef, useState } from 'react';
 import 'react-quill/dist/quill.snow.css';
 import { IPost } from '../blog';
 import Form from '@/components/ common/Form';
@@ -8,9 +8,9 @@ import styled from '@emotion/styled';
 import NextImage from 'next/image';
 import customFetch from '@/functions/api';
 import { useRouter } from 'next/navigation';
-import dynamic from 'next/dynamic';
+import ForwardedQuill from '@/components/ common/Quill';
+import ReactQuill, { Quill } from 'react-quill';
 
-const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 
 const Wrapper = styled.div`
     height: calc(90vh - 260px);
@@ -33,7 +33,7 @@ const Input = styled.input`
     padding: 15px;
 `;
 
-const CustomQuill = styled(ReactQuill)`
+const CustomQuill = styled(ForwardedQuill)`
     height: 40vh;
     margin-bottom: 67px;
 
@@ -87,9 +87,51 @@ export default function Post() {
         src: null,
         name: '',
     });
+    const quillRef = useRef<ReactQuill>(null);
 
     const handleImage = async () => {
-        console.log('image');
+        const input = document.createElement('input');
+        input.setAttribute('type', 'file');
+        input.setAttribute('accept', 'image/*');
+        input.click();
+
+        input.addEventListener('change', async () => {
+            if (input.files) {
+                const file = input.files[0];
+                try {
+                    const formData = new FormData();
+                    formData.append('image', file);
+                    const res = await customFetch('/image/blog', 'POST', formData);
+                    const url = res.image;
+
+                    if (quillRef.current) {
+                        const editor = quillRef.current.getEditor();
+                        const range = editor.getSelection();
+                        if (range) {
+                            editor.insertEmbed(range.index, 'image', url);
+                            // 이미지 삽입 후 자동 줄 바꿈
+                            editor.insertEmbed(range.index + 1, 'block', '<br>');
+
+                            // editor.container
+                            // @ts-ignore
+                            const editorElem = editor.container;
+                            const imgElem = editorElem.querySelector(`img[src="${url}"]`);
+
+                            if (imgElem) {
+                                imgElem.setAttribute('style', 'max-width: 50%; height: auto;');
+                            }
+
+                            editor.setSelection({
+                                index: range.index + 2,
+                                length: 0
+                            });
+                        }
+                    }
+                } catch (error) {
+                    console.log(error);
+                }
+            }
+        });
     };
 
     const modules = useMemo(() => ({
@@ -150,6 +192,7 @@ export default function Post() {
                     placeholder='제목'
                     onChange={(e) => { setPost({ ...post, title: e.target.value }); }} />
                 <CustomQuill
+                    forwardedRef={quillRef}
                     theme='snow'
                     value={post.body}
                     onChange={(e) => { setPost({ ...post, body: e }); }}
