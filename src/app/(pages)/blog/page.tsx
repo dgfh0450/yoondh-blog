@@ -5,6 +5,8 @@ import { PostResponse } from './blog';
 import Card from './Card';
 import styles from './blog.module.scss';
 
+export const dynamic = 'force-dynamic';
+
 export default async function Blog() {
     const { db, close } = await dbConnect();
     const collection = db.collection('blog_post');
