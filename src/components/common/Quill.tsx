@@ -43,7 +43,7 @@ CustomCodeBlock.tagName = 'pre';
 const ForwardedQuill = dynamic(
     async () => {
         const { default: QuillComponent } = await import('react-quill');
-        QuillComponent.Quill.register(CustomCodeBlock)
+        QuillComponent.Quill.register(CustomCodeBlock);
         const Quill = ({ forwardedRef, ...props }: ForwardedQuillComponent) => (
             <QuillComponent ref={forwardedRef} {...props} />
         );

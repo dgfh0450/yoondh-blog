@@ -139,7 +139,7 @@ export default function Post() {
             const editor = quillRef.current.getEditor();
             const range = editor.getSelection();
             if (range) {
-                editor.insertEmbed(range.index, 'custom-code-block', '테스트')
+                editor.insertEmbed(range.index, 'custom-code-block', '테스트');
             }
         }
     };
