@@ -13,7 +13,7 @@ export default function Card({ _id, title, body, created, thumbnail }: WithId<Po
     const date = _date.padStart(2, '0');
 
     return (
-        <Link className={styles.container} href={`/blog/${_id}`}>
+        <Link className={`${styles.container} card`} href={`/blog/${_id}`}>
             <div className={styles.imgWrapper}>
                 {thumbnail && <Image src={thumbnail} width={100} height={100} layout='responsive' alt='post-thumbnail' />}
             </div>
