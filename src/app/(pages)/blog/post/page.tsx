@@ -3,14 +3,14 @@
 import React, { FormEvent, useMemo, useRef, useState } from 'react';
 import 'react-quill/dist/quill.snow.css';
 import { IPost } from '../blog';
-import Form from '@/components/ common/Form';
+import Form from '@/components/common/Form';
 import styled from '@emotion/styled';
 import NextImage from 'next/image';
 import customFetch from '@/functions/api';
 import { useRouter } from 'next/navigation';
-import ForwardedQuill from '@/components/ common/Quill';
+import ForwardedQuill from '@/components/common/Quill';
 import ReactQuill, { Quill } from 'react-quill';
-
+import '../../../../components/common/code-block.scss';
 
 const Wrapper = styled.div`
     height: calc(90vh - 260px);
@@ -134,6 +134,16 @@ export default function Post() {
         });
     };
 
+    const handleCodeBlock = () => {
+        if (quillRef.current) {
+            const editor = quillRef.current.getEditor();
+            const range = editor.getSelection();
+            if (range) {
+                editor.insertEmbed(range.index, 'custom-code-block', '테스트')
+            }
+        }
+    };
+
     const modules = useMemo(() => ({
         toolbar: {
             container: [
@@ -143,8 +153,9 @@ export default function Post() {
                 ['code-block', 'image'],
             ],
             handlers: {
-                image: handleImage
-            }
+                image: handleImage,
+                'code-block': handleCodeBlock
+            },
         }
     }), []);
 
