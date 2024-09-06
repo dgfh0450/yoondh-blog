@@ -1,48 +1,15 @@
 import dynamic from 'next/dynamic';
 import ReactQuill, { ReactQuillProps } from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import Quill from 'quill';
 
 interface ForwardedQuillComponent extends ReactQuillProps {
     forwardedRef: React.Ref<ReactQuill>;
 }
 
-// Quill 블록 타입 정의
-const Block = Quill.import('blots/block');
-
-// 커스텀 Blot 클래스 정의
-class CustomCodeBlock extends Block {
-    static create(value: any) {
-        let node = super.create();
-        node.setAttribute('class', 'custom-code');
-        node.setAttribute('spellcheck', 'false');
-        return node;
-    }
-
-    static formats(node: any) {
-        return node.getAttribute('data-value');
-    }
-
-    static value(node: any) {
-        return node.getAttribute('data-value');
-    }
-
-    format(name: any, value: any) {
-        if (name === 'custom-code-block' && value) {
-            this.domNode.setAttribute('data-value', value);
-        } else {
-            super.format(name, value);
-        }
-    }
-}
-
-// CustomCodeBlock 블록 타입 등록
-CustomCodeBlock.blotName = 'custom-code-block';
-CustomCodeBlock.tagName = 'pre';
-
 const ForwardedQuill = dynamic(
     async () => {
         const { default: QuillComponent } = await import('react-quill');
+        const CustomCodeBlock = await import('./CustomCodeBlock').then(module => module.default);
         QuillComponent.Quill.register(CustomCodeBlock);
         const Quill = ({ forwardedRef, ...props }: ForwardedQuillComponent) => (
             <QuillComponent ref={forwardedRef} {...props} />
