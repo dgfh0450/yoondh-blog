@@ -13,7 +13,7 @@ jobs:
         
       - name: Pull latest changes
         run: |    
-          cd Desktop/yoondh-blog
+          cd /Users/yoondh/Desktop/yoondh-blog
           git pull origin main
 
       - name: Restart Docker container
