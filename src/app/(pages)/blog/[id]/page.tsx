@@ -4,6 +4,7 @@ import React from 'react';
 import { PostResponse } from '../blog';
 import styles from './post.module.scss';
 import '../../../../components/common/code-block.scss';
+import './quill.snow.css';
 
 export default async function Post({ params }: { params: { id: string } }) {
     const { id } = params;
